@@ -17,3 +17,15 @@ def solve_quadratic(a, b, c):
 
 def get_not_nan(arr):
     return arr[~np.isnan(arr)]
+
+def add_respecting_nans(arr1, arr2):
+    """
+    :param arr1: N, M
+    :param arr2: N, M
+    :return: Result of addition, where NaNs are treated as zero. Result has NaN iff both arrays have NaN at that position.
+    """
+    nans_1 = np.isnan(arr1)
+    nans_2 = np.isnan(arr2)
+    arr1[nans_1 & ~nans_2] = 0
+    arr2[~nans_1 & nans_2] = 0
+    return arr1 + arr2
