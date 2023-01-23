@@ -26,3 +26,13 @@ class Rays:
         :return: N, 3
         """
         return self.origins + t[:, np.newaxis] * self.directions
+
+    def flatten(self):
+        previous_shape = self.origins.shape[:-1]
+        self.origins = self.origins.reshape(-1, 3)
+        self.directions = self.directions.reshape(-1, 3)
+        return previous_shape
+
+    def unflatten(self, previous_shape):
+        self.origins = self.origins.reshape(previous_shape + (3,))
+        self.directions = self.directions.reshape(previous_shape + (3,))

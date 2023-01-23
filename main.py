@@ -27,9 +27,10 @@ def update(events):
     screen = np.swapaxes(screen, 0, 1) # width, height, 3
     screen = screen.reshape(width*height, 3) # width * height, 3
 
-    camera_pos = np.tile(camera, (width * height, 1)) # width * height, 3
+    camera_pos = np.tile(camera, (width*height, 1)) # width * height, 3
 
     rays = Rays.from_point_pairs(froms=camera_pos, tos=screen) # width*height, 3, 3
+    rays.unflatten((width, height))
     # rays = Rays(np.array([[0, 0, 1]]), np.array([[0, 0, -1]])) # width*height, 3, 3
 
     result = scene.render_rays(rays)

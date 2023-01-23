@@ -13,6 +13,8 @@ class Primitive:
         raise NotImplementedError()
 
     def render(self, rays, lights):
+        rays_previous_shape = rays.flatten()
+
         intersections = self.intersect(rays)
         mask = ~np.isnan(intersections[:, 0])
 
@@ -28,4 +30,5 @@ class Primitive:
 
             result[mask] += blinn_phong(self.material, intersections[mask], self.normal_at(intersections[mask]), to_light, to_observer)
 
-        return np.clip(result, 0, 1)
+        rays.unflatten(rays_previous_shape)
+        return np.clip(np.reshape(result, (*rays_previous_shape, 3)), 0, 1)
