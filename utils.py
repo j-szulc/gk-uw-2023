@@ -1,4 +1,5 @@
-import numpy as np
+from imports import *
+
 
 
 def solve_quadratic(a, b, c):

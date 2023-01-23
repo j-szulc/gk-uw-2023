@@ -1,5 +1,4 @@
-import numpy as np
-
+from imports import *
 
 def blinn_phong(material, points, normals, towards_light, towards_observer):
     """
@@ -16,4 +15,4 @@ def blinn_phong(material, points, normals, towards_light, towards_observer):
     diffuse = material.diffuse_colors_at(points) * np.sum(normals * towards_light, axis=1, keepdims=True)
     specular = material.specular_colors_at(points) * np.sum(normals * halfway, axis=1, keepdims=True) ** material.shininess
     specular = np.clip(specular, 0, 1)
-    return np.clip(material.ambient_colors_at(points) + diffuse + specular, 0, 1)
+    return diffuse + specular

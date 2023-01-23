@@ -1,13 +1,14 @@
-import numpy as np
-from utils import *
-from blinn_phong import *
+from imports import *
 
-class Sphere:
+from utils import *
+from primitive import *
+
+class Sphere(Primitive):
     def __init__(self, center, radius, material):
+        super().__init__(material)
         self.center = center
         self.radius = radius
         self.radius_sq = radius ** 2
-        self.material = material
 
     def normal_at(self, points):
         """
@@ -37,19 +38,4 @@ class Sphere:
         result_t[roots_minus_t >= 0] = roots_minus_t[roots_minus_t >= 0]
 
         result = rays.evaluate_at_t(result_t)
-        return result
-
-    def render(self, rays, light):
-        intersections = self.intersect(rays)
-        mask = ~np.isnan(intersections[:, 0])
-
-        to_observer = rays.origins[mask] - intersections[mask]
-        to_observer /= np.linalg.norm(to_observer, axis=1, keepdims=True)
-
-        to_light = light - intersections[mask]
-        to_light /= np.linalg.norm(to_light, axis=1, keepdims=True)
-
-        result = np.full_like(intersections, np.nan)
-        result[mask] = blinn_phong(self.material, intersections[mask], self.normal_at(intersections[mask]), to_light, to_observer)
-
         return result
