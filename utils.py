@@ -13,3 +13,6 @@ def solve_quadratic(a, b, c):
     roots_minus[mask] = (-b[mask] - sqrt_delta) / (2 * a[mask])
     roots_plus[mask] = (-b[mask] + sqrt_delta) / (2 * a[mask])
     return roots_minus, roots_plus
+
+def get_not_nan(arr):
+    return arr[~np.isnan(arr)]

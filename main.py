@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 from rays import *
 from sphere import *
 
-width = 300
-height = 200
+width = 3000
+height = 2000
 
 camera = np.array([0, 0, 1])
 camera_direction = np.array([0, 0, -1])
@@ -21,22 +21,16 @@ screen = screen.reshape(width*height, 3) # width * height, 3
 camera_pos = np.tile(camera, (width * height, 1)) # width * height, 3
 
 rays = Rays.from_point_pairs(froms=camera_pos, tos=screen) # width*height, 3, 3
+# rays = Rays(np.array([[0, 0, 1]]), np.array([[0, 0, -1]])) # width*height, 3, 3
 
-sphere = Sphere(center=np.array([0, 0, -2]), radius=1)
+sphere = Sphere(center=np.array([0, 0, -2]), radius=1, ambient_color=np.array([0.5, 0, 0]), diffuse_color=np.array([0.5, 0, 0]), specular_color=np.array([1,1,1]), shininess=25)
 
-intersections = sphere.intersect(rays) # width*height, 3
+result = sphere.render(rays, np.array([1,1,1])) # width*height, 3
+result = result.reshape(width, height, 3) # width, height, 3
 
-intersections = intersections.reshape(width, height, 3) # width, height, 3
-
+mask = result[:, :, 2] > 0
 image = np.zeros((width, height, 3))
+image[mask] = result[mask]
 
-image[intersections[:, :, 2] > 0] = 1
 image = np.swapaxes(image, 0, 1)
-
-#
-# for i, y in enumerate():
-#     for j, x in enumerate(np.linspace(screen[0], screen[2], width)):
-#         # image[i, j] = ...
-#         print("progress: %d/%d" % (i + 1, height))
-#
 plt.imsave('image.png', image)
