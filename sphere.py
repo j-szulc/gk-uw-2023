@@ -1,15 +1,13 @@
 import numpy as np
 from utils import *
+from blinn_phong import *
 
 class Sphere:
-    def __init__(self, center, radius, ambient_color, diffuse_color, specular_color, shininess):
+    def __init__(self, center, radius, material):
         self.center = center
         self.radius = radius
         self.radius_sq = radius ** 2
-        self.ambient_color = ambient_color
-        self.diffuse_color = diffuse_color
-        self.specular_color = specular_color
-        self.shininess = shininess
+        self.material = material
 
     def normal_at(self, points):
         """
@@ -52,7 +50,6 @@ class Sphere:
         to_light /= np.linalg.norm(to_light, axis=1, keepdims=True)
 
         result = np.full_like(intersections, np.nan)
-        result[mask] = self.blinn_phong(intersections[mask], to_light, to_observer)
+        result[mask] = blinn_phong(self.material, intersections[mask], self.normal_at(intersections[mask]), to_light, to_observer)
 
-        # result[mask] /= np.linalg.norm(result[mask], axis=1, keepdims=True)
         return result

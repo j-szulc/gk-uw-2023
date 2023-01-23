@@ -1,16 +1,19 @@
 import numpy as np
 
-def blinn_phong(self, points, towards_light, towards_observer):
+
+def blinn_phong(material, points, normals, towards_light, towards_observer):
     """
+    :param material: Material
     :param points: N, 3
+    :param normals: N, 3
     :param towards_light: N, 3
     :param towards_observer: N, 3
     :return: N, 3
     """
-    normals = self.normal_at(points)
+    normals = material.normals_override(points, normals)
     halfway = towards_light + towards_observer
     halfway /= np.linalg.norm(halfway, axis=1, keepdims=True)
-    diffuse = self.diffuse_color * np.sum(normals * towards_light, axis=1, keepdims=True)
-    specular = self.specular_color * np.sum(normals * halfway, axis=1, keepdims=True) ** self.shininess
+    diffuse = material.diffuse_colors_at(points) * np.sum(normals * towards_light, axis=1, keepdims=True)
+    specular = material.specular_colors_at(points) * np.sum(normals * halfway, axis=1, keepdims=True) ** material.shininess
     specular = np.clip(specular, 0, 1)
-    return np.clip(self.ambient_color + diffuse + specular, 0, 1)
+    return np.clip(material.ambient_colors_at(points) + diffuse + specular, 0, 1)
