@@ -56,8 +56,8 @@ def update(events):
 
     tmin, targmin = scene.cast_rays(rays)
     result = scene.render(rays, tmin, targmin)
-
-    return result*255
+    result = result * 255
+    return result.cpu().numpy()
 
 viewer = Viewer(update, (width, height))
 viewer.start()

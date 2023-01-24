@@ -24,11 +24,13 @@ class Scene:
         rays.flatten()
         ts = [primitive.intersect_t(rays) for primitive in self.primitives]
         t = np.stack(ts, axis=1)
-        targmin = np.nanargmin(t, axis=1)
-        tmin = np.take_along_axis(t, np.expand_dims(targmin, axis=1), axis=1).squeeze(axis=1)
 
-        targmin[(tmin == np.inf) | (tmin == np.nan)] = 0    # np.nargmin can't be trusted with only infs and nans
-        tmin[(tmin == np.inf) | (tmin == np.nan)] = np.inf  # np.nargmin can't be trusted with only infs and nans
+        nanmask = np.isnan(t)
+        t[nanmask] = np.inf
+        targmin = np.argmin(t, axis=1)
+        t[nanmask] = np.nan
+
+        tmin = np.min(t, axis=1)
 
         return tmin, targmin
 
@@ -38,7 +40,7 @@ class Scene:
 
         for i, primitive in enumerate(self.primitives):
             mask = targmin == i
-            result[mask] = primitive.render(self, rays[mask], tmin[mask], self.lights)
+            result[mask] = np.array(primitive.render(self, rays[mask], tmin[mask], self.lights), dtype=np.float32)
 
         result = result.reshape((self.width, self.height, 3))
         return result

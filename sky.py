@@ -29,4 +29,4 @@ class Sky(Primitive):
 
     def render(self, _scene, rays, _, _lights):
         # Sky is blue
-        return np.broadcast_to([0, 0, 0], rays.directions.shape)
+        return np.broadcast_to(np.array([0, 0, 0]), rays.directions.shape)

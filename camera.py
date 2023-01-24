@@ -1,3 +1,4 @@
+
 from imports import *
 from rays import *
 from scipy.spatial.transform import Rotation
@@ -51,7 +52,7 @@ class Camera:
         screen = np.swapaxes(screen, 0, 1)  # width, height, 3
         screen = screen.reshape(-1, 3)  # width * height, 3
 
-        screen = self.position + np.dot(screen, self.perspective_matrix)  # width * height, 3
+        screen = self.position + np.matmul(screen, self.perspective_matrix)  # width * height, 3
 
         print(screen[self.width * self.height // 2])
         camera_pos = np.tile(self.position, (self.width * self.height, 1))  # width * height, 3

@@ -29,7 +29,9 @@ class Rays:
         :param t: N
         :return: N, 3
         """
-        return self.origins + t[:, np.newaxis] * self.directions
+        t = np.reshape(t, (-1, 1))
+        t = np.broadcast_to(t, self.origins.shape)
+        return self.origins + t * self.directions
 
     def flatten(self):
         previous_shape = self.origins.shape[:-1]
