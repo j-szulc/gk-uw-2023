@@ -12,8 +12,8 @@ from camera import *
 last_update_time = time()
 width = 600
 height = 600
-wres = 200
-hres = 200
+wres = 600
+hres = 600
 scene = Scene(width, height, wres, hres)
 camera = Camera(width=width, height=height, wres=wres, hres=hres,position=[0, 0, 0], direction=[0, 0, 1], up=[0, 1, 0])
 

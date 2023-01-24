@@ -14,14 +14,27 @@ class Scene:
         self.wres = wres
         self.hres = hres
 
-        material = BasicMaterial(ambient_color=np.array([0.1, 0, 0]), diffuse_color=np.array([0.5, 0, 0]),
+        red_material = BasicMaterial(ambient_color=np.array([0.1, 0, 0]), diffuse_color=np.array([0.5, 0, 0]),
                                  specular_color=np.array([1, 1, 1]), shininess=25)
 
-        self.primitives = [Sky(), Sphere(np.array([0, 1000, 0]), 900, material)]
-        for i in range(3):
-            for j in range(3):
-                self.primitives.append(Sphere(center=np.array([i, j, 3]), radius=0.5, material=material))
-        self.lights = [np.array([0.5, 0.5, 2.9]), np.array([0.5, 0.5, -1])]
+        green_material = BasicMaterial(ambient_color=np.array([0, 0.1, 0]), diffuse_color=np.array([0, 0.5, 0]),
+                                     specular_color=np.array([1, 1, 1]), shininess=25)
+
+        blue_material = BasicMaterial(ambient_color=np.array([0, 0, 0.1]), diffuse_color=np.array([0, 0, 0.5]),
+                                     specular_color=np.array([1, 1, 1]), shininess=25)
+
+        gray_material = BasicMaterial(ambient_color=np.array([0.1, 0.1, 0.1]), diffuse_color=np.array([0.1, 0.1, 0.1]),
+                                     specular_color=np.array([1, 1, 1]), shininess=10)
+
+        self.primitives = [
+            Sky(),
+            Sphere(np.array([0, 1000, 0]), 900, gray_material),
+            Sphere(np.array([-3, 0, 5]), 1, red_material),
+            Sphere(np.array([0, 0, 5]), 1, green_material),
+            Sphere(np.array([3, 0, 5]), 1, blue_material)
+        ]
+
+        self.lights = [np.array([0, -100, 0])]
 
     def cast_rays(self, rays):
         rays.flatten()
