@@ -8,6 +8,7 @@ from viewer import *
 from time import time
 from scene import *
 from camera import *
+from skimage.transform import resize
 
 last_update_time = time()
 width = 600
@@ -34,13 +35,13 @@ def update(events):
     if keys_pressed[pygame.K_d]:
         camera.move_right(1)
     if keys_pressed[pygame.K_LEFT]:
-        camera.rotate_right(0.1)
+        camera.rotate_right(1)
     if keys_pressed[pygame.K_RIGHT]:
-        camera.rotate_right(-0.1)
+        camera.rotate_right(-1)
     if keys_pressed[pygame.K_UP]:
-        camera.rotate_up(0.1)
+        camera.rotate_up(1)
     if keys_pressed[pygame.K_DOWN]:
-        camera.rotate_up(-0.1)
+        camera.rotate_up(-1)
     print(np.dot(camera.direction, camera.up))
     # for event in events:
     #     if event.type == pygame.KEYDOWN:
@@ -55,11 +56,9 @@ def update(events):
 
     # rays = Rays(np.array([[0, 0, 1]]), np.array([[0, 0, -1]])) # width*height, 3, 3
     rays = camera.get_rays()
+    result = scene.cast_and_render(rays)
 
-    tmin, targmin = scene.cast_rays(rays)
-    result = scene.render(rays, tmin, targmin)
-
-    return result*255
+    return resize(result*255, (width, height), anti_aliasing=True).astype(np.uint8)
 
 viewer = Viewer(update, (width, height))
 viewer.start()

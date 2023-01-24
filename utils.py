@@ -29,3 +29,11 @@ def add_respecting_nans(arr1, arr2):
     arr1[nans_1 & ~nans_2] = 0
     arr2[~nans_1 & nans_2] = 0
     return arr1 + arr2
+
+def reflect(v, n):
+    """
+    :param v: N, 3
+    :param n: N, 3
+    :return: N, 3
+    """
+    return v - 2 * np.sum(v * n, axis=1, keepdims=True) * n

@@ -10,7 +10,7 @@ class Rays:
         self.ttl = ttl
 
     def __getitem__(self, item):
-        return Rays(self.origins[item, :], self.directions[item, :])
+        return Rays(self.origins[item, :], self.directions[item, :], self.ttl)
 
     @staticmethod
     def from_point_pairs(froms, tos):
@@ -22,7 +22,7 @@ class Rays:
         origins = froms
         directions = tos - froms
         directions /= np.linalg.norm(directions, axis=1, keepdims=True)
-        return Rays(origins, directions)
+        return Rays(origins, directions, ttl=1)
 
     def evaluate_at_t(self, t):
         """
@@ -43,3 +43,7 @@ class Rays:
 
     def offset(self, t_offset):
         self.origins += t_offset * self.directions
+
+    def n_of_rays(self):
+        assert len(self.origins.shape) == 2, "Rays must be flattened!"
+        return self.origins.shape[0]

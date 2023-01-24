@@ -31,14 +31,14 @@ class Camera:
         self.position += self.right * delta * self.camera_speed
 
     def rotate_right(self, angle):
-        rotation = Rotation.from_rotvec(self.up * angle)
+        rotation = Rotation.from_rotvec(self.up * angle * self.camera_speed)
         self.direction = rotation.apply(self.direction)
         self.right = np.cross(self.direction, self.up)
         self.right /= np.linalg.norm(self.right)
         self.perspective_matrix = np.vstack((self.right, self.up, self.direction)).T
 
     def rotate_up(self, angle):
-        rotation = Rotation.from_rotvec(self.right * angle)
+        rotation = Rotation.from_rotvec(self.right * angle * self.camera_speed)
         self.direction = rotation.apply(self.direction)
         self.up = np.cross(self.right, self.direction)
         self.up /= np.linalg.norm(self.up)
