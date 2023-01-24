@@ -7,12 +7,13 @@ from quad import *
 
 class Scene:
 
-    def __init__(self, width, height, wres, hres):
+    def __init__(self, width, height, wres, hres, debug_rays = lambda rays: None):
 
         self.width = width
         self.height = height
         self.wres = wres
         self.hres = hres
+        self.debug_rays = debug_rays
 
         red_material = BasicMaterial(ambient_color=np.array([0.1, 0, 0]), diffuse_color=np.array([0.5, 0, 0]),
                                  specular_color=np.array([1, 1, 1]), shininess=25)
@@ -32,14 +33,18 @@ class Scene:
             Sphere(np.array([-3, 0, 5]), 1, red_material),
             Sphere(np.array([0, 0, 5]), 1, green_material),
             MirrorSphere(np.array([3, 0, 5]), 1),
-            Quad(np.array([0., 0, 10.]), np.array([10., 0., 0.]), np.array([0., 10., 0.]), green_material),
+            Quad(np.array([0., 0, 10.]), np.array([10., 0., 0.]), np.array([0., 10., 0.]), BasicMaterial(ambient_color=np.array([0, 0.1, 0]), diffuse_color=np.array([0, 0.5, 0]),
+                                     specular_color=np.array([0.3, 0.3, 0.3]), shininess=25)),
             Sphere(np.array([0., 2., 10.]), 0.1, red_material),
             Sphere(np.array([6, 0, 5]), 1, blue_material)
         ]
 
         self.lights = [np.array([0, -100, 0])]
+        # self.lights = [np.array([0, -100, 0]), np.array([0., 0., 8.])]
 
     def cast_rays(self, rays):
+        self.debug_rays(rays)
+
         rays_previous_shape = rays.flatten()
         ts = [primitive.intersect_t(rays) for primitive in self.primitives]
         t = np.stack(ts, axis=1)

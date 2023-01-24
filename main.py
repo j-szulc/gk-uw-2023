@@ -15,9 +15,15 @@ width = 600
 height = 600
 wres = 200
 hres = 200
+
+# rays_to_debug = []
+# def debug_rays(rays):
+#     global rays_to_debug
+#     rays_to_debug.append(rays.copy())
+
+# scene = Scene(width, height, wres, hres, debug_rays)
 scene = Scene(width, height, wres, hres)
 camera = Camera(width=width, height=height, wres=wres, hres=hres,position=[2, 2, 0], direction=[0, 0, 1], up=[0, 1, 0])
-camera2 = Camera(width=width, height=height, wres=wres, hres=hres,position=[0, 0, 0], direction=[0, 0, 1], up=[0, 1, 0])
 
 def update(events):
     global last_update_time
@@ -25,6 +31,8 @@ def update(events):
     # print("FPS: ", 1/(time() - last_update_time))
     # print(camera.position)
     last_update_time = time()
+
+    current_camera = camera
 
     keys_pressed = pygame.key.get_pressed()
     if keys_pressed[pygame.K_w]:
@@ -43,6 +51,7 @@ def update(events):
         camera.rotate_up(1)
     if keys_pressed[pygame.K_DOWN]:
         camera.rotate_up(-1)
+
     # print(np.dot(camera.direction, camera.up))
     # for event in events:
     #     if event.type == pygame.KEYDOWN:
@@ -56,11 +65,21 @@ def update(events):
     #             camera.move_sideways(-1)
 
     # rays = Rays(np.array([[0, 0, 1]]), np.array([[0, 0, -1]])) # width*height, 3, 3
-    rays = camera.get_rays()
+    rays = current_camera.get_rays()
     result = scene.cast_and_render(rays)
     def overlay(surf):
-        beg, end = camera.project_to_screen(np.array([[0, 0, 5], [3, 0, 5]]), "pygame")
-        pygame.draw.line(surf, (255, 0, 0), beg, end)
+        # pygame.draw.line(surf, (255, 0, 0), camera.project_to_screen(camera2.position), camera.project_to_screen(camera2.position + camera2.direction))
+        # pygame.draw.line(surf, (0, 255, 0), camera.project_to_screen(camera2.position), camera.project_to_screen(camera2.position + camera2.right))
+        # pygame.draw.line(surf, (0, 0, 255), camera.project_to_screen(camera2.position), camera.project_to_screen(camera2.position + camera2.up))
+        # pygame.draw.circle(surf, (0, 0, 255), camera.project_to_screen(camera2.position), 5)
+        # global rays_to_debug
+        # for rays in rays_to_debug:
+        #     rays.flatten()
+        #     for beg, dir in zip(rays.origins, rays.directions):
+        #         if random.random() < 0.001:
+        #             pygame.draw.line(surf, (0, 255, 0), camera.project_to_screen(beg), camera.project_to_screen(beg + dir*100))
+        # rays_to_debug = []
+        pass
 
     return resize(result*255, (width, height), anti_aliasing=True).astype(np.uint8), overlay
 

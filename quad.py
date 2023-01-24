@@ -12,7 +12,7 @@ class Quad(Primitive):
         self.corner = corner
         self.x = x
         self.y = y
-        self.normal = np.cross(x, y)
+        self.normal = -np.cross(x, y)
 
     def normal_at(self, points):
         """

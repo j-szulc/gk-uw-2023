@@ -4,7 +4,7 @@ from imports import *
 
 class Rays:
 
-    def __init__(self, origins, directions, ttl=1):
+    def __init__(self, origins, directions, ttl=0):
         self.origins = origins
         self.directions = directions
         self.ttl = ttl
@@ -22,14 +22,14 @@ class Rays:
         origins = froms
         directions = tos - froms
         directions /= np.linalg.norm(directions, axis=1, keepdims=True)
-        return Rays(origins, directions, ttl=1)
+        return Rays(origins, directions)
 
     def evaluate_at_t(self, t):
         """
         :param t: N
         :return: N, 3
         """
-        return self.origins + t[:, np.newaxis] * self.directions
+        return self.origins + np.reshape(t, (-1, 1)) * self.directions
 
     def flatten(self):
         previous_shape = self.origins.shape[:-1]
@@ -47,3 +47,9 @@ class Rays:
     def n_of_rays(self):
         assert len(self.origins.shape) == 2, "Rays must be flattened!"
         return self.origins.shape[0]
+
+    def __copy__(self):
+        return Rays(self.origins.copy(), self.directions.copy(), self.ttl)
+
+    def copy(self):
+        return self.__copy__()

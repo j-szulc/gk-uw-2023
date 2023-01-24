@@ -65,15 +65,15 @@ class Camera:
 
         return rays
 
-    def project_to_screen(self, points, coord_system="center"):
-        points = points - self.position
-        points = np.matmul(points, self.perspective_matrix.T)
-        points = points[:, :2] / points[:, 2:]
-        points *= np.array([self.width, self.height])/2
+    def project_to_screen(self, point, coord_system="center"):
+        point = point - self.position
+        point = np.matmul(point, self.perspective_matrix.T)
+        point = point[:2]
+        point *= np.array([self.width, self.height])/2
 
         if coord_system == "pygame":
-            points += np.array([self.width, self.height])/2 # topleft = 0, 0
+            point += np.array([self.width, self.height])/2 # topleft = 0, 0
         else:
             assert coord_system == "center", "Unknown coordinate system!"
 
-        return points
+        return point
