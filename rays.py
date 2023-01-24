@@ -4,7 +4,7 @@ from imports import *
 
 class Rays:
 
-    def __init__(self, origins, directions, ttl=1, debug=False):
+    def __init__(self, origins, directions, ttl=default_ray_ttl, debug=False):
         self.origins = origins
         self.directions = directions
         self.ttl = ttl
