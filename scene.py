@@ -33,8 +33,8 @@ class Scene:
             Sphere(np.array([-3, 0, 5]), 1, red_material),
             Sphere(np.array([0, 0, 5]), 1, green_material),
             MirrorSphere(np.array([3, 0, 5]), 1),
-            Quad(np.array([0., 0, 10.]), np.array([10., 0., 0.]), np.array([0., 10., 0.]), BasicMaterial(ambient_color=np.array([0, 0.1, 0]), diffuse_color=np.array([0, 0.5, 0]),
-                                     specular_color=np.array([0.3, 0.3, 0.3]), shininess=25)),
+            Quad(np.array([0., 0, 10.]), np.array([2., 0., 0.]), np.array([0., 2., 0.]), BasicMaterial(ambient_color=np.array([0, 0.1, 0]), diffuse_color=np.array([0, 0.5, 0]),
+                                     specular_color=np.array([0., 0., 0.]), shininess=10)),
             Sphere(np.array([0., 2., 10.]), 0.1, red_material),
             Sphere(np.array([6, 0, 5]), 1, blue_material)
         ]

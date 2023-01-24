@@ -47,6 +47,13 @@ class Camera:
         self.up /= np.linalg.norm(self.up)
         self.update_persepective_matrix()
 
+    def reset_rotation(self):
+        self.direction = np.asarray([0, 0, 1], dtype=np.float32)
+        self.up = np.asarray([0, 1, 0], dtype=np.float32)
+        self.right = np.cross(self.direction, self.up)
+        self.right /= np.linalg.norm(self.right)
+        self.update_persepective_matrix()
+
     def get_rays(self):
 
         x = np.linspace(-self.ratio*self.clipping_distance, self.ratio*self.clipping_distance, self.wres)

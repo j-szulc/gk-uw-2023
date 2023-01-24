@@ -51,6 +51,8 @@ def update(events):
         camera.rotate_up(1)
     if keys_pressed[pygame.K_DOWN]:
         camera.rotate_up(-1)
+    if keys_pressed[pygame.K_r]:
+        camera.reset_rotation()
 
     # print(np.dot(camera.direction, camera.up))
     # for event in events:
