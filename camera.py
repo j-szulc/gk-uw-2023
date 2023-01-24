@@ -19,7 +19,7 @@ class Camera:
         self.right = np.cross(self.direction, self.up)
         self.right /= np.linalg.norm(self.right)
 
-        self.perspective_matrix = np.vstack((self.right, self.up, self.direction)).T
+        self.update_persepective_matrix()
 
         self.clipping_distance = 0.01
         self.camera_speed = camera_speed
@@ -30,19 +30,22 @@ class Camera:
     def move_right(self, delta):
         self.position += self.right * delta * self.camera_speed
 
+    def update_persepective_matrix(self):
+        self.perspective_matrix = np.vstack((self.right, self.up, self.direction))
+
     def rotate_right(self, angle):
         rotation = Rotation.from_rotvec(self.up * angle * self.camera_speed)
         self.direction = rotation.apply(self.direction)
         self.right = np.cross(self.direction, self.up)
         self.right /= np.linalg.norm(self.right)
-        self.perspective_matrix = np.vstack((self.right, self.up, self.direction)).T
+        self.update_persepective_matrix()
 
     def rotate_up(self, angle):
-        rotation = Rotation.from_rotvec(self.right * angle * self.camera_speed)
+        rotation = Rotation.from_rotvec(self.right * -angle * self.camera_speed)
         self.direction = rotation.apply(self.direction)
         self.up = np.cross(self.right, self.direction)
         self.up /= np.linalg.norm(self.up)
-        self.perspective_matrix = np.vstack((self.right, self.up, self.direction)).T
+        self.update_persepective_matrix()
 
     def get_rays(self):
 
@@ -53,7 +56,7 @@ class Camera:
         screen = np.swapaxes(screen, 0, 1)  # width, height, 3
         screen = screen.reshape(-1, 3)  # width * height, 3
 
-        screen = self.position + np.dot(screen, self.perspective_matrix)  # width * height, 3
+        screen = self.position + np.matmul(screen, self.perspective_matrix)  # width * height, 3
 
         camera_pos = np.tile(self.position, (self.wres * self.hres, 1))  # width * height, 3
 
