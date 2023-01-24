@@ -1,3 +1,5 @@
+import numpy as np
+
 class BasicMaterial:
     override_normals = None
 
@@ -18,3 +20,9 @@ class BasicMaterial:
 
     def ambient_colors_at(self, _):
         return self.ambient_color
+
+class MirrorMaterial(BasicMaterial):
+    override_normals = None
+
+    def __init__(self, shininess):
+        super().__init__(np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([1, 1, 1]), shininess)

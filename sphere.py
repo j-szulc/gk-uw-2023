@@ -2,6 +2,7 @@ from imports import *
 
 from utils import *
 from primitive import *
+from material import *
 
 class Sphere(Primitive):
     def __init__(self, center, radius, material):
@@ -38,3 +39,11 @@ class Sphere(Primitive):
         result_t[roots_minus_t >= 0] = roots_minus_t[roots_minus_t >= 0]
 
         return result_t
+
+class MirrorSphere(Sphere):
+
+    def __init__(self, center, radius, shininess=25):
+        super().__init__(center, radius, MirrorMaterial(shininess))
+
+    def render(self, scene, rays, intersect_t, lights):
+        return super().render(scene, rays, intersect_t, []) + 0.05
