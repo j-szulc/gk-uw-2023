@@ -64,3 +64,16 @@ class Camera:
         rays.unflatten((self.wres, self.hres))
 
         return rays
+
+    def project_to_screen(self, points, coord_system="center"):
+        points = points - self.position
+        points = np.matmul(points, self.perspective_matrix.T)
+        points = points[:, :2] / points[:, 2:]
+        points *= np.array([self.width, self.height])/2
+
+        if coord_system == "pygame":
+            points += np.array([self.width, self.height])/2 # topleft = 0, 0
+        else:
+            assert coord_system == "center", "Unknown coordinate system!"
+
+        return points

@@ -3,6 +3,7 @@ from sphere import *
 from imports import *
 from utils import *
 from sky import *
+from quad import *
 
 class Scene:
 
@@ -31,6 +32,8 @@ class Scene:
             Sphere(np.array([-3, 0, 5]), 1, red_material),
             Sphere(np.array([0, 0, 5]), 1, green_material),
             MirrorSphere(np.array([3, 0, 5]), 1),
+            Quad(np.array([0., 0, 10.]), np.array([10., 0., 0.]), np.array([0., 10., 0.]), green_material),
+            Sphere(np.array([0., 2., 10.]), 0.1, red_material),
             Sphere(np.array([6, 0, 5]), 1, blue_material)
         ]
 

@@ -13,16 +13,17 @@ from skimage.transform import resize
 last_update_time = time()
 width = 600
 height = 600
-wres = 600
-hres = 600
+wres = 200
+hres = 200
 scene = Scene(width, height, wres, hres)
-camera = Camera(width=width, height=height, wres=wres, hres=hres,position=[0, 0, 0], direction=[0, 0, 1], up=[0, 1, 0])
+camera = Camera(width=width, height=height, wres=wres, hres=hres,position=[2, 2, 0], direction=[0, 0, 1], up=[0, 1, 0])
+camera2 = Camera(width=width, height=height, wres=wres, hres=hres,position=[0, 0, 0], direction=[0, 0, 1], up=[0, 1, 0])
 
 def update(events):
     global last_update_time
     global scene
-    print("FPS: ", 1/(time() - last_update_time))
-    print(camera.position)
+    # print("FPS: ", 1/(time() - last_update_time))
+    # print(camera.position)
     last_update_time = time()
 
     keys_pressed = pygame.key.get_pressed()
@@ -42,7 +43,7 @@ def update(events):
         camera.rotate_up(1)
     if keys_pressed[pygame.K_DOWN]:
         camera.rotate_up(-1)
-    print(np.dot(camera.direction, camera.up))
+    # print(np.dot(camera.direction, camera.up))
     # for event in events:
     #     if event.type == pygame.KEYDOWN:
     #         if event.unicode == "w":
@@ -57,8 +58,11 @@ def update(events):
     # rays = Rays(np.array([[0, 0, 1]]), np.array([[0, 0, -1]])) # width*height, 3, 3
     rays = camera.get_rays()
     result = scene.cast_and_render(rays)
+    def overlay(surf):
+        beg, end = camera.project_to_screen(np.array([[0, 0, 5], [3, 0, 5]]), "pygame")
+        pygame.draw.line(surf, (255, 0, 0), beg, end)
 
-    return resize(result*255, (width, height), anti_aliasing=True).astype(np.uint8)
+    return resize(result*255, (width, height), anti_aliasing=True).astype(np.uint8), overlay
 
 viewer = Viewer(update, (width, height))
 viewer.start()

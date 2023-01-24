@@ -37,3 +37,11 @@ def reflect(v, n):
     :return: N, 3
     """
     return v - 2 * np.sum(v * n, axis=1, keepdims=True) * n
+
+def project(v, n):
+    """
+    :param v: N, 3
+    :param n: N, 3, normalized
+    :return: N, 3
+    """
+    return np.sum(v * n, axis=1, keepdims=True) * n
