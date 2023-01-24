@@ -29,7 +29,7 @@ class Rays:
         :param t: N
         :return: N, 3
         """
-        return self.origins + np.reshape(t, (-1, 1)) * self.directions
+        return self.origins + t[:, np.newaxis] * self.directions
 
     def flatten(self):
         previous_shape = self.origins.shape[:-1]
@@ -43,11 +43,3 @@ class Rays:
 
     def offset(self, t_offset):
         self.origins += t_offset * self.directions
-
-    def project(self, camera):
-        """
-        :param camera: Camera
-        :return:
-        """
-        ends = self.evaluate_at_t(1e3)
-        camera.project_points(self.origins)
