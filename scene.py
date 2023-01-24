@@ -4,46 +4,24 @@ from imports import *
 from utils import *
 from sky import *
 from quad import *
+from portal import *
 
 class Scene:
 
-    def __init__(self, width, height, wres, hres, debug_rays = lambda rays: None):
+    def __init__(self, width, height, wres, hres, primitives, lights, debug_rays = lambda rays: None):
 
         self.width = width
         self.height = height
         self.wres = wres
         self.hres = hres
         self.debug_rays = debug_rays
-
-        red_material = BasicMaterial(ambient_color=np.array([0.1, 0, 0]), diffuse_color=np.array([0.5, 0, 0]),
-                                 specular_color=np.array([1, 1, 1]), shininess=25)
-
-        green_material = BasicMaterial(ambient_color=np.array([0, 0.1, 0]), diffuse_color=np.array([0, 0.5, 0]),
-                                     specular_color=np.array([1, 1, 1]), shininess=25)
-
-        blue_material = BasicMaterial(ambient_color=np.array([0, 0, 0.1]), diffuse_color=np.array([0, 0, 0.5]),
-                                     specular_color=np.array([1, 1, 1]), shininess=25)
-
-        gray_material = BasicMaterial(ambient_color=np.array([0.1, 0.1, 0.1]), diffuse_color=np.array([0.1, 0.1, 0.1]),
-                                     specular_color=np.array([1, 1, 1]), shininess=10)
-
-        self.primitives = [
-            Sky(),
-            Sphere(np.array([0, 1000, 0]), 900, gray_material),
-            Sphere(np.array([-3, 0, 5]), 1, red_material),
-            Sphere(np.array([0, 0, 5]), 1, green_material),
-            MirrorSphere(np.array([3, 0, 5]), 1),
-            Quad(np.array([0., 0, 10.]), np.array([2., 0., 0.]), np.array([0., 2., 0.]), BasicMaterial(ambient_color=np.array([0, 0.1, 0]), diffuse_color=np.array([0, 0.5, 0]),
-                                     specular_color=np.array([0., 0., 0.]), shininess=10)),
-            Sphere(np.array([0., 2., 10.]), 0.1, red_material),
-            Sphere(np.array([6, 0, 5]), 1, blue_material)
-        ]
-
-        self.lights = [np.array([0, -100, 0])]
-        # self.lights = [np.array([0, -100, 0]), np.array([0., 0., 8.])]
+        self.primitives = primitives
+        self.lights = lights
 
     def cast_rays(self, rays):
-        self.debug_rays(rays)
+
+        if rays.debug:
+            self.debug_rays(rays)
 
         rays_previous_shape = rays.flatten()
         ts = [primitive.intersect_t(rays) for primitive in self.primitives]

@@ -6,23 +6,12 @@ from material import *
 from sphere import *
 from viewer import *
 from time import time
-from scene import *
+from scene1 import *
 from camera import *
 from skimage.transform import resize
 
 last_update_time = time()
-width = 600
-height = 600
-wres = 200
-hres = 200
 
-# rays_to_debug = []
-# def debug_rays(rays):
-#     global rays_to_debug
-#     rays_to_debug.append(rays.copy())
-
-# scene = Scene(width, height, wres, hres, debug_rays)
-scene = Scene(width, height, wres, hres)
 camera = Camera(width=width, height=height, wres=wres, hres=hres,position=[2, 2, 0], direction=[0, 0, 1], up=[0, 1, 0])
 
 def update(events):
@@ -31,8 +20,6 @@ def update(events):
     # print("FPS: ", 1/(time() - last_update_time))
     # print(camera.position)
     last_update_time = time()
-
-    current_camera = camera
 
     keys_pressed = pygame.key.get_pressed()
     if keys_pressed[pygame.K_w]:
@@ -67,21 +54,20 @@ def update(events):
     #             camera.move_sideways(-1)
 
     # rays = Rays(np.array([[0, 0, 1]]), np.array([[0, 0, -1]])) # width*height, 3, 3
-    rays = current_camera.get_rays()
+    rays = camera.get_rays()
     result = scene.cast_and_render(rays)
     def overlay(surf):
         # pygame.draw.line(surf, (255, 0, 0), camera.project_to_screen(camera2.position), camera.project_to_screen(camera2.position + camera2.direction))
         # pygame.draw.line(surf, (0, 255, 0), camera.project_to_screen(camera2.position), camera.project_to_screen(camera2.position + camera2.right))
         # pygame.draw.line(surf, (0, 0, 255), camera.project_to_screen(camera2.position), camera.project_to_screen(camera2.position + camera2.up))
         # pygame.draw.circle(surf, (0, 0, 255), camera.project_to_screen(camera2.position), 5)
-        # global rays_to_debug
-        # for rays in rays_to_debug:
-        #     rays.flatten()
-        #     for beg, dir in zip(rays.origins, rays.directions):
-        #         if random.random() < 0.001:
-        #             pygame.draw.line(surf, (0, 255, 0), camera.project_to_screen(beg), camera.project_to_screen(beg + dir*100))
-        # rays_to_debug = []
-        pass
+        global rays_to_debug
+        for rays in rays_to_debug:
+            rays.flatten()
+            for beg, dir in zip(rays.origins, rays.directions):
+                # pygame.draw.circle(surf, (0, 0, 255), camera.project_to_screen(), 5)
+                pygame.draw.line(surf, (0, 255, 0), camera.project_to_screen(beg), camera.project_to_screen(beg + dir*100))
+        rays_to_debug = []
 
     return resize(result*255, (width, height), anti_aliasing=True).astype(np.uint8), overlay
 

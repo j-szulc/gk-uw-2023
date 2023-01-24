@@ -4,10 +4,11 @@ from imports import *
 
 class Rays:
 
-    def __init__(self, origins, directions, ttl=0):
+    def __init__(self, origins, directions, ttl=1, debug=False):
         self.origins = origins
         self.directions = directions
         self.ttl = ttl
+        self.debug = debug
 
     def __getitem__(self, item):
         return Rays(self.origins[item, :], self.directions[item, :], self.ttl)

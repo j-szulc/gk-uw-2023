@@ -21,6 +21,9 @@ class Quad(Primitive):
         """
         return self.normal
 
+    def get_basis(self):
+        return np.vstack([self.x, self.y, self.normal]).T
+
     def intersect_t(self, rays):
         """
         :param rays: Rays
@@ -49,6 +52,3 @@ class Quad(Primitive):
         t[~mask] = np.nan
 
         return t
-
-# q = Quad(np.array([0., 0., 0.]), np.array([1., 0., 0.]), np.array([0., 1., 0.]), None)
-# r = Rays(np.array([[0., 0., 1.]]), np.array([[0., -1./np.sqrt(2), -1./np.sqrt(2)]]))

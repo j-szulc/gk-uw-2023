@@ -72,7 +72,7 @@ class Camera:
 
         return rays
 
-    def project_to_screen(self, point, coord_system="center"):
+    def project_to_screen(self, point, coord_system="pygame"):
         point = point - self.position
         point = np.matmul(point, self.perspective_matrix.T)
         point = point[:2]
