@@ -61,3 +61,13 @@ class Camera:
         rays.unflatten((self.wres, self.hres))
 
         return rays
+
+    def project_points(self, points):
+        """
+        :param points: N, 3
+        :return: N, 2
+        """
+        points = points - self.position
+        points = np.dot(points, self.perspective_matrix.T)
+        points = points[:, :2] / points[:, 2:]
+        return points

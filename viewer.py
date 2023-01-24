@@ -23,8 +23,11 @@ class Viewer:
                     running = False
                 events.append(event)
 
-            Z = self.update_func(events)
+            Z, overlay = self.update_func(events)
             surf = pygame.surfarray.make_surface(Z)
+
+            overlay(surf)
+
             self.display.blit(surf, (0, 0))
 
             pygame.display.update()
