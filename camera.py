@@ -4,9 +4,11 @@ from scipy.spatial.transform import Rotation
 
 class Camera:
 
-    def __init__(self, width, height, position, direction, up, camera_speed=0.1):
+    def __init__(self, width, height, wres, hres, position, direction, up, camera_speed=0.1):
         self.width = width
         self.height = height
+        self.wres = wres
+        self.hres = hres
         self.ratio = float(width) / height
         self.position = np.asarray(position, dtype=np.float32)
 
@@ -44,8 +46,8 @@ class Camera:
 
     def get_rays(self):
 
-        x = np.linspace(-self.ratio*self.clipping_distance, self.ratio*self.clipping_distance, self.width)
-        y = np.linspace(-self.clipping_distance, self.clipping_distance, self.height)
+        x = np.linspace(-self.ratio*self.clipping_distance, self.ratio*self.clipping_distance, self.wres)
+        y = np.linspace(-self.clipping_distance, self.clipping_distance, self.hres)
         z = self.clipping_distance * np.ones((1))
         screen = np.dstack(np.meshgrid(x, y, z))  # height, width, 3
         screen = np.swapaxes(screen, 0, 1)  # width, height, 3
@@ -53,10 +55,9 @@ class Camera:
 
         screen = self.position + np.dot(screen, self.perspective_matrix)  # width * height, 3
 
-        print(screen[self.width * self.height // 2])
-        camera_pos = np.tile(self.position, (self.width * self.height, 1))  # width * height, 3
+        camera_pos = np.tile(self.position, (self.wres * self.hres, 1))  # width * height, 3
 
         rays = Rays.from_point_pairs(froms=camera_pos, tos=screen)  # width*height, 3, 3
-        rays.unflatten((self.width, self.height))
+        rays.unflatten((self.wres, self.hres))
 
         return rays

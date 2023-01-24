@@ -12,8 +12,10 @@ from camera import *
 last_update_time = time()
 width = 600
 height = 600
-scene = Scene(width, height)
-camera = Camera(width=width, height=height, position=[0, 0, 0], direction=[0, 0, 1], up=[0, 1, 0])
+wres = 200
+hres = 200
+scene = Scene(width, height, wres, hres)
+camera = Camera(width=width, height=height, wres=wres, hres=hres,position=[0, 0, 0], direction=[0, 0, 1], up=[0, 1, 0])
 
 def update(events):
     global last_update_time
