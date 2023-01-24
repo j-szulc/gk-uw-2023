@@ -26,21 +26,10 @@ class Primitive:
         result[:, :] = self.material.ambient_colors_at(intersections)
 
         for light in lights:
-            to_light = light.position - intersections
-            light_dist = np.linalg.norm(to_light, axis=1, keepdims=True)
-            to_light /= light_dist
-            light_dist = light_dist[:, 0]
-
             if rays.ttl > 0:
-                new_rays = Rays(intersections, to_light, rays.ttl - 1)
-                new_rays.offset(1e-6)
-                new_intersect_t, _ = scene.cast_rays(new_rays)
-                enlightened = np.asarray(new_intersect_t >= light_dist - 1e-6, dtype=bool)
-            else:
-                enlightened = np.full_like(light_dist, True, dtype=bool)
-
-            if enlightened.any():
-                result[enlightened] += light.color * blinn_phong(self.material, intersections[enlightened], self.normal_at(intersections[enlightened]), to_light[enlightened], to_observer[enlightened])
+                for to_light, enlightened in scene.find_routes(intersections, light.position):
+                    if enlightened.any():
+                        result[enlightened] += light.color * blinn_phong(self.material, intersections[enlightened], self.normal_at(intersections[enlightened]), to_light[enlightened], to_observer[enlightened])
 
         if rays.ttl > 0:
             new_rays = Rays(intersections, reflect(rays.directions, self.normal_at(intersections)), rays.ttl - 1)

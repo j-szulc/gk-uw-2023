@@ -8,7 +8,7 @@ from portal import *
 
 class Scene:
 
-    def __init__(self, width, height, wres, hres, primitives, lights, debug_rays = lambda rays: None):
+    def __init__(self, width, height, wres, hres, primitives, lights, debug_rays = lambda rays: None, portals=None):
 
         self.width = width
         self.height = height
@@ -17,6 +17,9 @@ class Scene:
         self.debug_rays = debug_rays
         self.primitives = primitives
         self.lights = lights
+        if portals is None:
+            portals = []
+        self.portals = portals
 
     def cast_rays(self, rays):
 
@@ -52,3 +55,28 @@ class Scene:
     def cast_and_render(self, rays):
         tmin, targmin = self.cast_rays(rays)
         return self.render(rays, tmin, targmin)
+
+    def find_routes(self, origins, destination):
+
+        # check direct
+
+        direct = destination - origins
+        direct_dist = np.linalg.norm(direct, axis=1, keepdims=True)
+        direct /= direct_dist
+        direct_dist = direct_dist[:, 0]
+
+        new_rays = Rays(origins, direct, 1)
+        new_rays.offset(1e-6)
+        new_intersect_t, _ = self.cast_rays(new_rays)
+        enlightened = np.asarray(new_intersect_t >= direct_dist - 1e-6, dtype=bool)
+
+        yield direct, enlightened
+
+        # check portals
+
+        for portal in self.portals:
+
+            # FIXME not working
+            fake_reflection = portal.paired_quad.corner + ((origins - portal.corner) @ portal.transform_to_paired)
+            indirect = destination - fake_reflection
+            corresponding_indirect = (indirect - portal.paired_quad.corner) @ np.linalg.inv(portal.paired_quad.transform_to_paired) + portal.corner

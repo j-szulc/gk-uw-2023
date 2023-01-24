@@ -6,7 +6,7 @@ from material import *
 from sphere import *
 from viewer import *
 from time import time
-from scene1 import *
+from scene2 import *
 from camera import *
 from skimage.transform import resize
 

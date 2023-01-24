@@ -34,13 +34,17 @@ class Quad(Primitive):
         orthogonal_direction = project(rays.directions, -self.normal)
 
         t = np.linalg.norm(plane_altitude, axis=1) / np.linalg.norm(orthogonal_direction, axis=1)
+        proj_x = np.full_like(t, np.nan)
+        proj_y = np.full_like(t, np.nan)
+        proj_z = np.full_like(t, np.nan)
+
         mask = t > 0
 
         intersections = rays[mask].evaluate_at_t(t[mask])
 
-        proj_x = np.dot(intersections - self.corner, self.x) / np.sum(self.x ** 2)
-        proj_y = np.dot(intersections - self.corner, self.y) / np.sum(self.y ** 2)
-        proj_z = np.dot(intersections - self.corner, self.normal)
+        proj_x[mask] = np.dot(intersections - self.corner, self.x) / np.sum(self.x ** 2)
+        proj_y[mask] = np.dot(intersections - self.corner, self.y) / np.sum(self.y ** 2)
+        proj_z[mask] = np.dot(intersections - self.corner, self.normal)
 
         mask &= proj_x > 0
         mask &= proj_x < 1

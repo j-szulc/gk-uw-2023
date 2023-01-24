@@ -1,4 +1,7 @@
-import numpy as np
+try:
+    import cupy as np
+except ImportError:
+    import numpy as np
 import matplotlib.pyplot as plt
 width = 600
 height = 600
