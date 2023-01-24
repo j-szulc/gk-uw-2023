@@ -4,9 +4,10 @@ from imports import *
 
 class Rays:
 
-    def __init__(self, origins, directions):
+    def __init__(self, origins, directions, ttl=1):
         self.origins = origins
         self.directions = directions
+        self.ttl = ttl
 
     def __getitem__(self, item):
         return Rays(self.origins[item, :], self.directions[item, :])
@@ -39,3 +40,6 @@ class Rays:
     def unflatten(self, previous_shape):
         self.origins = self.origins.reshape(previous_shape + (3,))
         self.directions = self.directions.reshape(previous_shape + (3,))
+
+    def offset(self, t_offset):
+        self.origins += t_offset * self.directions

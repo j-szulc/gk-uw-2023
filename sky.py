@@ -27,6 +27,6 @@ class Sky(Primitive):
     def intersect_t(self, rays):
         return np.full_like(rays.directions[:, 0], np.inf)
 
-    def render(self, rays, _, _):
+    def render(self, _scene, rays, _, _lights):
         # Sky is blue
-        return np.broadcast_to([0, 0, 1], rays.directions.shape)
+        return np.broadcast_to([0, 0, 0], rays.directions.shape)

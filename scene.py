@@ -11,14 +11,14 @@ class Scene:
         self.width = width
         self.height = height
 
-        material = BasicMaterial(ambient_color=np.array([0.5, 0, 0]), diffuse_color=np.array([0.5, 0, 0]),
+        material = BasicMaterial(ambient_color=np.array([0.1, 0, 0]), diffuse_color=np.array([0.5, 0, 0]),
                                  specular_color=np.array([1, 1, 1]), shininess=25)
 
         self.primitives = [Sky(), Sphere(np.array([0, 1000, 0]), 900, material)]
         for i in range(3):
             for j in range(3):
                 self.primitives.append(Sphere(center=np.array([i, j, 3]), radius=0.5, material=material))
-        self.lights = [np.array([0.5, 0.5, 2.9])]
+        self.lights = [np.array([0.5, 0.5, 2.9]), np.array([0.5, 0.5, -1])]
 
     def cast_rays(self, rays):
         rays.flatten()
@@ -27,13 +27,18 @@ class Scene:
         targmin = np.nanargmin(t, axis=1)
         tmin = np.take_along_axis(t, np.expand_dims(targmin, axis=1), axis=1).squeeze(axis=1)
 
-        targmin[(tmin == np.inf) | (tmin == np.nan)] = 0 # np.nargmin can't be trusted with only infs and nans
+        targmin[(tmin == np.inf) | (tmin == np.nan)] = 0    # np.nargmin can't be trusted with only infs and nans
+        tmin[(tmin == np.inf) | (tmin == np.nan)] = np.inf  # np.nargmin can't be trusted with only infs and nans
+
+        return tmin, targmin
+
+    def render(self, rays, tmin, targmin):
 
         result = np.full((self.width * self.height, 3), np.nan)
 
         for i, primitive in enumerate(self.primitives):
             mask = targmin == i
-            result[mask] = primitive.render(rays[mask], ts[i][mask], self.lights)
+            result[mask] = primitive.render(self, rays[mask], tmin[mask], self.lights)
 
         result = result.reshape((self.width, self.height, 3))
         return result

@@ -54,7 +54,8 @@ def update(events):
     # rays = Rays(np.array([[0, 0, 1]]), np.array([[0, 0, -1]])) # width*height, 3, 3
     rays = camera.get_rays()
 
-    result = scene.cast_rays(rays)
+    tmin, targmin = scene.cast_rays(rays)
+    result = scene.render(rays, tmin, targmin)
 
     return result*255
 
