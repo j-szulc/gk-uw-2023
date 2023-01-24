@@ -10,9 +10,9 @@ from scene import *
 from camera import *
 
 last_update_time = time()
-scene = Scene()
 width = 600
 height = 600
+scene = Scene(width, height)
 camera = Camera(width=width, height=height, position=[0, 0, 0], direction=[0, 0, 1], up=[0, 1, 0])
 
 def update(events):
@@ -54,12 +54,9 @@ def update(events):
     # rays = Rays(np.array([[0, 0, 1]]), np.array([[0, 0, -1]])) # width*height, 3, 3
     rays = camera.get_rays()
 
-    result = scene.render_rays(rays)
-    mask = result[:, :, 0] > 0
-    image = np.zeros((width, height, 3))
-    image[mask] = result[mask]
+    result = scene.cast_rays(rays)
 
-    return image*255
+    return result*255
 
 viewer = Viewer(update, (width, height))
 viewer.start()

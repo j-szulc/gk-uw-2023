@@ -17,10 +17,10 @@ class Sphere(Primitive):
         """
         return (points - self.center) / self.radius
 
-    def intersect(self, rays):
+    def intersect_t(self, rays, fill_value=np.nan):
         """
         :param rays: Rays
-        :return: number_of_rays, 3 (intersection point or None)
+        :return: number_of_rays, 3 (t-value of intersection point or [fill_value])
         """
         # ray(t) = a+b*t
         # sphere: |p-c| = r
@@ -32,10 +32,9 @@ class Sphere(Primitive):
         a = np.ones(1)
         roots_minus_t, roots_plus_t = solve_quadratic(a, b, c)
 
-        result_t = np.full_like(roots_minus_t, np.nan)
+        result_t = np.full_like(roots_minus_t, fill_value)
 
         result_t[roots_plus_t >= 0] = roots_plus_t[roots_plus_t >= 0]
         result_t[roots_minus_t >= 0] = roots_minus_t[roots_minus_t >= 0]
 
-        result = rays.evaluate_at_t(result_t)
-        return result
+        return result_t

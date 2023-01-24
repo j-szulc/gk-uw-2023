@@ -8,6 +8,9 @@ class Rays:
         self.origins = origins
         self.directions = directions
 
+    def __getitem__(self, item):
+        return Rays(self.origins[item, :], self.directions[item, :])
+
     @staticmethod
     def from_point_pairs(froms, tos):
         """

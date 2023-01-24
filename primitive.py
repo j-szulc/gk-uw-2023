@@ -9,13 +9,13 @@ class Primitive:
     def normal_at(self, points):
         raise NotImplementedError()
 
-    def intersect(self, rays):
+    def intersect_t(self, rays):
         raise NotImplementedError()
 
-    def render(self, rays, lights):
+    def render(self, rays, intersect_t, lights):
         rays_previous_shape = rays.flatten()
 
-        intersections = self.intersect(rays)
+        intersections = rays.evaluate_at_t(intersect_t)
         mask = ~np.isnan(intersections[:, 0])
 
         to_observer = rays.origins[mask] - intersections[mask]
