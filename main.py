@@ -16,6 +16,7 @@ wres = 200
 hres = 200
 scene = Scene(width, height, wres, hres)
 camera = Camera(width=width, height=height, wres=wres, hres=hres,position=[0, 0, 0], direction=[0, 0, 1], up=[0, 1, 0])
+camera2 = Camera(width=width, height=height, wres=wres, hres=hres,position=[1, 1, 0], direction=[0, 0, 1], up=[0, 1, 0])
 
 def update(events):
     global last_update_time
@@ -41,25 +42,17 @@ def update(events):
         camera.rotate_up(0.1)
     if keys_pressed[pygame.K_DOWN]:
         camera.rotate_up(-0.1)
-    print(np.dot(camera.direction, camera.up))
-    # for event in events:
-    #     if event.type == pygame.KEYDOWN:
-    #         if event.unicode == "w":
-    #             camera.move_forward(1)
-    #         if event.unicode == "s":
-    #             camera.move_forward(-1)
-    #         if event.unicode == "a":
-    #             camera.move_sideways(1)
-    #         if event.unicode == "d":
-    #             camera.move_sideways(-1)
 
-    # rays = Rays(np.array([[0, 0, 1]]), np.array([[0, 0, -1]])) # width*height, 3, 3
     rays = camera.get_rays()
 
     tmin, targmin = scene.cast_rays(rays)
     result = scene.render(rays, tmin, targmin)
 
-    return result*255
+    def overlay(surface):
+        rays.project(camera2)
+
+    return result*255, overlay
+
 
 viewer = Viewer(update, (width, height))
 viewer.start()
