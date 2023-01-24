@@ -1,5 +1,12 @@
 from imports import *
 
+class Light:
+
+    def __init__(self, position, color = np.array([1, 1, 1])):
+        self.position = np.asarray(position)
+        self.color = np.asarray(color)
+
+
 def blinn_phong(material, points, normals, towards_light, towards_observer):
     """
     :param material: Material

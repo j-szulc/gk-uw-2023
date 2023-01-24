@@ -1,5 +1,5 @@
 from imports import *
-from blinn_phong import *
+from light import *
 from rays import Rays
 from utils import *
 
@@ -26,7 +26,7 @@ class Primitive:
         result[:, :] = self.material.ambient_colors_at(intersections)
 
         for light in lights:
-            to_light = light - intersections
+            to_light = light.position - intersections
             light_dist = np.linalg.norm(to_light, axis=1, keepdims=True)
             to_light /= light_dist
             light_dist = light_dist[:, 0]
@@ -40,7 +40,7 @@ class Primitive:
                 enlightened = np.full_like(light_dist, True, dtype=bool)
 
             if enlightened.any():
-                result[enlightened] += blinn_phong(self.material, intersections[enlightened], self.normal_at(intersections[enlightened]), to_light[enlightened], to_observer[enlightened])
+                result[enlightened] += light.color * blinn_phong(self.material, intersections[enlightened], self.normal_at(intersections[enlightened]), to_light[enlightened], to_observer[enlightened])
 
         if rays.ttl > 0:
             new_rays = Rays(intersections, reflect(rays.directions, self.normal_at(intersections)), rays.ttl - 1)
