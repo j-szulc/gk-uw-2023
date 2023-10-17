@@ -25,6 +25,6 @@ class Portal(Quad):
         new_directions = -rays.directions @ self.transform_to_paired
         new_directions /= np.linalg.norm(new_directions, axis=1, keepdims=True)
         # new_directions = np.broadcast_to([0,0,-1], rays.directions.shape)
-        new_rays = Rays(new_origins, new_directions, rays.ttl - 1)
+        new_rays = Rays(new_origins, new_directions, rays.ttl - 1, True)
         result = scene.cast_and_render(new_rays)
         return result
